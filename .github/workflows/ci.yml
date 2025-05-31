@@ -58,6 +58,7 @@ jobs:
 
           cd deploy-repo
           unique_branch="update-manifests-$(date +'%Y%m%d%H%M%S')"
+          echo "BRANCH_NAME=$unique_branch" >> $GITHUB_ENV
           git checkout -b "$unique_branch"
           git add k8s/exercice-api.yaml
           git commit -m "Update K8s manifest from CI"
@@ -70,4 +71,4 @@ jobs:
           path: deploy-repo
           commit-message: "Update K8s manifests"
           title: "Update K8s manifests from CI"
-          branch: update-manifests
+          branch: ${{ env.BRANCH_NAME }}
