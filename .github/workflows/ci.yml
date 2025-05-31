@@ -1,0 +1,68 @@
+name: CI/CD
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-test-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore packages
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --no-restore --configuration Release
+
+      - name: Run Tests
+        run: dotnet test --no-build --configuration Release
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build Docker image
+        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/exercice-api:latest .
+
+      - name: Push Docker image
+        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/exercice-api:latest
+
+  deploy-manifest:
+    needs: build-test-publish
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout app repo
+        uses: actions/checkout@v4
+
+      - name: Clone deploy repo
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git clone https://github.com/${{ secrets.DEPLOY_REPO }} deploy-repo
+          cp k8s/exercice-api.yaml deploy-repo/k8s/exercice-api.yaml
+          cd deploy-repo
+          git checkout -b update-manifests || git checkout update-manifests
+          git add k8s/exercice-api.yaml
+          git commit -m "Update K8s manifest from CI"
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ secrets.DEPLOY_REPO }} update-manifests
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          path: deploy-repo
+          commit-message: "Update K8s manifests"
+          title: "Update K8s manifests from CI"
+          branch: update-manifests
