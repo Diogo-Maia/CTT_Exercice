@@ -37,5 +37,21 @@ namespace ExerciceApi.Tests.Services
             Assert.Equal(29.99f, result.Price);
             Assert.Single(result.Categories);
         }
+
+        [Fact]
+        public void RegisterProduct_ShouldThrowException_WhenPriceIsInvalid()
+        {
+            //Arrange
+            var service = new ProductService();
+            var request = new RegisterProductRequest
+            {
+                Description = "Invalid Price",
+                Price = "Price",
+                Categories = new List<CategoryDTO>(),
+            };
+
+            //Act & Assert
+            Assert.Throws<FormatException>(() => service.RegisterProduct(request));
+        }
     }
 }
