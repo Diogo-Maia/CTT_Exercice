@@ -51,7 +51,10 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git clone https://github.com/${{ secrets.DEPLOY_REPO }} deploy-repo
+
+          mkdir -p deploy-repo/k8s
           cp k8s/exercice-api.yaml deploy-repo/k8s/exercice-api.yaml
+          
           cd deploy-repo
           git checkout -b update-manifests || git checkout update-manifests
           git add k8s/exercice-api.yaml
