@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using MongoDB.Driver;
 using ExerciceApi.Models;
 using ExerciceApi.Repositories.Interface;
 
@@ -9,14 +6,20 @@ namespace ExerciceApi.Repositories.Implementation
 {
     public class ProductRepository : IProductRepository
     {
-        public Task<Product> GetProductByIdAsync(string id)
+        private readonly IMongoCollection<Product> _collection;
+        public ProductRepository(IMongoClient client)
         {
-            throw new NotImplementedException();
+            var database = client.GetDatabase("ProductDB");
+            _collection = database.GetCollection<Product>("Products");
+        }
+        public async Task<Product> GetProductByIdAsync(string id)
+        {
+            return await _collection.Find(p => p.Id == id).FirstOrDefaultAsync();
         }
 
-        public Task SaveAsync(Product product)
+        public async Task SaveAsync(Product product)
         {
-            throw new NotImplementedException();
+            await _collection.InsertOneAsync(product);
         }
     }
 }
