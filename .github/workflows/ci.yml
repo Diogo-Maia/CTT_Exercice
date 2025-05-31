@@ -58,7 +58,7 @@ jobs:
 
           cd deploy-repo
           unique_branch="update-manifests-$(date +'%Y%m%d%H%M%S')"
-          git checkout -b unique_branch
+          git checkout -b "$unique_branch"
           git add k8s/exercice-api.yaml
           git commit -m "Update K8s manifest from CI"
           git push https://x-access-token:${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/${{ secrets.DEPLOY_REPO }} update-manifests
