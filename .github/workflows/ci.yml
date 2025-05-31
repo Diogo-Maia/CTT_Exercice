@@ -46,24 +46,17 @@ jobs:
       - name: Checkout app repo
         uses: actions/checkout@v4
 
-      - name: Clone deploy repo
+      - name: Prepare manifest in deploy-repo
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git clone https://github.com/${{ secrets.DEPLOY_REPO }} deploy-repo
 
+          git clone https://github.com/${{ secrets.DEPLOY_REPO }} deploy-repo
           mkdir -p deploy-repo/k8s
+
           echo "# Updated at $(date)" >> k8s/exercice-api.yaml
           cp k8s/exercice-api.yaml deploy-repo/k8s/exercice-api.yaml
 
-          cd deploy-repo
-          unique_branch="update-manifests-$(date +'%Y%m%d%H%M%S')"
-          git checkout -b "$unique_branch"
-          git add k8s/exercice-api.yaml
-          git commit -m "Update K8s manifest from CI"
-          git push https://x-access-token:${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/${{ secrets.DEPLOY_REPO }} "$unique_branch"
-
-          echo "BRANCH_NAME=$unique_branch" >> $GITHUB_ENV
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5
@@ -73,4 +66,4 @@ jobs:
           commit-message: "Update K8s manifests"
           title: "Update K8s manifests from CI"
           base: main
-          branch: ${{ env.BRANCH_NAME }}
+          branch: update-manifests-${{ github.run_id }}
