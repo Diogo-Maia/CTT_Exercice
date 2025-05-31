@@ -53,6 +53,7 @@ jobs:
           git clone https://github.com/${{ secrets.DEPLOY_REPO }} deploy-repo
 
           mkdir -p deploy-repo/k8s
+          echo "# Updated at $(date)" >> k8s/exercice-api.yaml
           cp k8s/exercice-api.yaml deploy-repo/k8s/exercice-api.yaml
 
           cd deploy-repo
