@@ -3,30 +3,35 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using ExerciceApi.Models;
+using ExerciceApi.Services.Interface;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace ExerciceApi.Controllers.Product
 {
-    [Route("[controller]")]
-    public class ProductsController : Controller
+    [ApiController]
+    [Route("api/products")]
+    public class ProductsController : ControllerBase
     {
-        private readonly ILogger<ProductsController> _logger;
-
-        public ProductsController(ILogger<ProductsController> logger)
+        private readonly IProductService _productService;
+        public ProductsController(IProductService productService)
         {
-            _logger = logger;
+            _productService = productService;
         }
 
-        public IActionResult Index()
+        [HttpPost]
+        public async Task<IActionResult> Register([FromBody] RegisterProductRequest request)
         {
-            return View();
+            var product = _productService.RegisterProduct(request);
+            return CreatedAtAction(nameof(GetById), new { id = product.Id}, product);
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(string id)
         {
-            return View("Error!");
+            var product = await _productService.GetProductByIdAsync(id);
+            return product == null ? NotFound() : Ok(product);
         }
     }
 }
