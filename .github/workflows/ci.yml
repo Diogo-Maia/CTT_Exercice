@@ -54,12 +54,12 @@ jobs:
 
           mkdir -p deploy-repo/k8s
           cp k8s/exercice-api.yaml deploy-repo/k8s/exercice-api.yaml
-          
+
           cd deploy-repo
           git checkout -b update-manifests || git checkout update-manifests
           git add k8s/exercice-api.yaml
           git commit -m "Update K8s manifest from CI"
-          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ secrets.DEPLOY_REPO }} update-manifests
+          git push https://x-access-token:${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/${{ secrets.DEPLOY_REPO }} update-manifests
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5
