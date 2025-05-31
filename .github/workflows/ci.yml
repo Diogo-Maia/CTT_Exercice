@@ -71,4 +71,5 @@ jobs:
           path: deploy-repo
           commit-message: "Update K8s manifests"
           title: "Update K8s manifests from CI"
+          base: main
           branch: ${{ env.BRANCH_NAME }}
