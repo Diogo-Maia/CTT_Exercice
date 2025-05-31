@@ -58,16 +58,17 @@ jobs:
 
           cd deploy-repo
           unique_branch="update-manifests-$(date +'%Y%m%d%H%M%S')"
-          echo "BRANCH_NAME=$unique_branch" >> $GITHUB_ENV
           git checkout -b "$unique_branch"
           git add k8s/exercice-api.yaml
           git commit -m "Update K8s manifest from CI"
           git push https://x-access-token:${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/${{ secrets.DEPLOY_REPO }} "$unique_branch"
 
+          echo "BRANCH_NAME=$unique_branch" >> $GITHUB_ENV
+
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           path: deploy-repo
           commit-message: "Update K8s manifests"
           title: "Update K8s manifests from CI"
