@@ -21,7 +21,7 @@ namespace ExerciceApi.Tests.Services
         }
 
         [Fact]
-        public void RegisterProduct_ShouldReturnValidProduct_WhenGivenValidRequest()
+        public async Task RegisterProduct_ShouldReturnValidProduct_WhenGivenValidRequest()
         {
             //Arrange
             var (service, _) = CreateService();
@@ -40,7 +40,7 @@ namespace ExerciceApi.Tests.Services
             };
 
             //Act
-            var result = service.RegisterProduct(request);
+            var result = await service.RegisterProduct(request);
 
             //Assert
             Assert.NotNull(result.Id);
@@ -62,7 +62,7 @@ namespace ExerciceApi.Tests.Services
             };
 
             //Act & Assert
-            Assert.Throws<FormatException>(() => service.RegisterProduct(request));
+            Assert.ThrowsAsync<FormatException>(async () => await service.RegisterProduct(request));
         }
 
         [Fact]
