@@ -23,7 +23,7 @@ namespace ExerciceApi.Controllers.Product
         [HttpPost]
         public async Task<IActionResult> Register([FromBody] RegisterProductRequest request)
         {
-            var product = _productService.RegisterProduct(request);
+            var product = await _productService.RegisterProduct(request);
             return CreatedAtAction(nameof(GetById), new { id = product.Id}, product);
         }
 

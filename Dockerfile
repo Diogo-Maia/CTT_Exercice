@@ -12,6 +12,7 @@ RUN dotnet restore
 COPY . .
 RUN dotnet publish ExerciceApi -c Release --no-restore -o /app/publish
 
+FROM base AS final
 WORKDIR /app
 COPY --from=build /app/publish .
 EXPOSE 80

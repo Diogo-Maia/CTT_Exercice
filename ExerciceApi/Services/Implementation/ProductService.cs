@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using ExerciceApi.Models;
 using ExerciceApi.Repositories.Interface;
 using ExerciceApi.Services.Interface;
@@ -18,7 +19,7 @@ namespace ExerciceApi.Services.Implementation
             return await _productRepository.GetProductByIdAsync(id);
         }
 
-        public Product RegisterProduct(RegisterProductRequest request)
+        public async Task<Product> RegisterProduct(RegisterProductRequest request)
         {
             var product = new Product
             {
@@ -29,7 +30,7 @@ namespace ExerciceApi.Services.Implementation
                 Stock = 0
             };
 
-            _productRepository.SaveAsync(product);
+            await _productRepository.SaveAsync(product);
 
             return product;
         }

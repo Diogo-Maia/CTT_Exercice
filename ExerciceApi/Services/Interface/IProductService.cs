@@ -8,7 +8,7 @@ namespace ExerciceApi.Services.Interface
 {
     public interface IProductService
     {
-        Product RegisterProduct(RegisterProductRequest request);
+        Task<Product> RegisterProduct(RegisterProductRequest request);
         Task<Product?> GetProductByIdAsync(string id); 
     }
 }
