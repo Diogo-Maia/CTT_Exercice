@@ -51,7 +51,8 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-          git clone https://github.com/${{ secrets.DEPLOY_REPO }} deploy-repo
+          git clone https://${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/${{ secrets.DEPLOY_REPO }} deploy-repo
+
           mkdir -p deploy-repo/k8s
 
           echo "# Updated at $(date)" >> k8s/exercice-api.yaml
@@ -63,7 +64,8 @@ jobs:
           git checkout -b update-manifests-${{ github.run_id }}
           git add k8s/exercice-api.yaml
           git commit -m "Update K8s manifest from CI" || echo "No changes to commit"
-          git push origin update-manifests-${{ github.run_id }}
+          git push https://${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/${{ secrets.DEPLOY_REPO }} update-manifests-${{ github.run_id }}
+
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5
