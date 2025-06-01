@@ -40,10 +40,27 @@ GET /api/products/{id}
 
 ## How To Run Locally
 
-### Run via Docker Compose
-```bash
-docker compose up
-``` 
+### Run via Docker Desktop
+Make sure you have "Enable Kubernets" setting enabled in your settings.
+
+- Clone the [CTT_Exercice_Deploys](https://github.com/Diogo-Maia/CTT_Exercice_Deploys)
+```
+git clone https://github.com/your-username/CTT_Exercice_API.git
+cd CTT_Exercice_API
+```
+- Apply the manifest
+```
+kubectl apply -f k8s/exercice-api.yaml
+```
+- Confirm pod is running
+```
+kubectl get pods
+```
+- Expose the service
+```
+kubectl port-forward service/exercice-api 5000:8080
+```
+Project should be available [here](http://localhost:5000/swagger)
 
 ## Project Structure
 
