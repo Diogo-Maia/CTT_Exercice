@@ -52,11 +52,12 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
           git clone https://${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/${{ secrets.DEPLOY_REPO }} deploy-repo
-          cd deploy-repo/
 
-          mkdir -p k8s
+          mkdir -p deploy-repo/k8s
 
           echo "# Updated at $(date)" >> k8s/exercice-api.yaml
+          cp k8s/exercice-api.yaml deploy-repo/k8s/exercice-api.yaml
+
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5
