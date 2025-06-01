@@ -14,9 +14,12 @@ spec:
     spec:
       containers:
         - name: exercice-api
-          image: DOCKERHUB_USERNAME/exercice-api:latest
+          image: issamaia/exercice-api:latest
           ports:
             - containerPort: 80
+          env:
+            - name: ConnectionStrings__MongoDb
+              value: "mongodb://mongo:27017"
 ---
 apiVersion: v1
 kind: Service
@@ -26,5 +29,7 @@ spec:
   selector:
     app: exercice-api
   ports:
-    - port: 80
+    - protocol: TCP
+      port: 80
       targetPort: 80
+  type: ClusterIP
