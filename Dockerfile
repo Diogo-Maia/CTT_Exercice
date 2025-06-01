@@ -10,7 +10,7 @@ COPY ExerciceApi.Tests/ExerciceApi.Tests.csproj ExerciceApi.Tests/
 RUN dotnet restore
 
 COPY . .
-RUN dotnet publish ExerciceApi -c Release --no-restore -o /app/publish
+RUN dotnet publish ExerciceApi -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
